@@ -13,10 +13,6 @@ export default function Home() {
       }
     }, [isOpen, onOpen])
 
-    return (
-      <div className="p-4">
-        Pagina de inicio
-      </div>
-    )
+    return null
 }
   
