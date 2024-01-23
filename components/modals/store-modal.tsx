@@ -9,6 +9,7 @@ import { Modal } from "@/components/ui/modal"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { useState } from 'react'
 
 
 
@@ -18,6 +19,8 @@ const formSchema = z.object({
 
 export const StoreModal = () => {
     const storeModal = useStoreModal();
+
+    const [loading, setLoading] = useState(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -50,19 +53,23 @@ export const StoreModal = () => {
                                             Nombre
                                         </FormLabel>
                                         <FormControl>
-                                            <Input placeholder='E-Commerce' {...field} />
+                                            <Input disabled={loading} placeholder='E-Commerce' {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                             <div className='pt-6 space-x-2 flex items-center justify-end w-full'>
-                                    <Button 
+                                    <Button
+                                        disabled={loading}
                                         variant='outline' 
                                         onClick={storeModal.onClose}>
                                             Cancelar
                                     </Button>
-                                    <Button type='submit'>
+                                    <Button
+                                        disabled={loading}
+                                        type='submit'
+                                        >
                                         Continuar
                                     </Button>
                             </div>
