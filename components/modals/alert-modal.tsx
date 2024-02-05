@@ -21,7 +21,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
 
     useEffect(() => {
         setIsMounted(true)
-    })
+    }, [])
 
     if (!isMounted) {
         return null
@@ -29,7 +29,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
 
     return (
         <Modal
-            title='¿Estás seguro de querer eliminar esta tienda?'
+            title='¿Estás seguro de querer eliminar?'
             description="Esta acción no se puede deshacer, piensatelo bien antes de tomar una decisión."
             isOpen={isOpen}
             onClose={onClose}
