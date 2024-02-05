@@ -8,7 +8,7 @@ import ImageUpload from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Billboard } from "@prisma/client";
+import { Size } from "@prisma/client";
 import axios from "axios";
 import { TrashIcon } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
@@ -18,17 +18,17 @@ import toast from "react-hot-toast";
 import { z } from "zod";
 
 const formSchema = z.object({
-    label: z.string().min(1),
-    imageUrl: z.string().min(1)
+    name: z.string().min(1),
+    value: z.string().min(1)
 })
 
-type BillboardFormValues = z.infer<typeof formSchema>
+type SizeFormValues = z.infer<typeof formSchema>
 
-interface BillboardFormProps {
-    initialData: Billboard | null;
+interface SizeFormProps {
+    initialData: Size | null;
 }
 
-export const BillboardForm: React.FC<BillboardFormProps> = ({
+export const SizeForm: React.FC<SizeFormProps> = ({
     initialData
 }) => {
     const params = useParams()
@@ -37,29 +37,29 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
     const [ open, setOpen ] = useState(false)
     const [ loading, setLoading ] = useState(false)
 
-    const title = initialData ? "Editar cartel" : "Crear un nuevo cartel"
-    const description = initialData ? "Editar un cartel" : "Agregar un cartel"
-    const toastMessage = initialData ? "Cartel actualizado." : "Cartel creado."
+    const title = initialData ? "Editar tamaño" : "Crear un nuevo tamaño"
+    const description = initialData ? "Editar un tamaño" : "Agregar un tamaño"
+    const toastMessage = initialData ? "Tamaño actualizado." : "Tamaño creado."
     const action = initialData ? "Guardar cambios" : "Crear"
 
-    const form = useForm<BillboardFormValues>({
+    const form = useForm<SizeFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: initialData || {
-            label: '',
-            imageUrl: ''
+            name: '',
+            value: ''
         }
     })
 
-    const onSubmit = async (data: BillboardFormValues) => {
+    const onSubmit = async (data: SizeFormValues) => {
         try {
             setLoading(true)
             if (initialData) {
-                await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, data)
+                await axios.patch(`/api/${params.storeId}/sizes/${params.sizeId}`, data)
             } else {
-                await axios.post(`/api/${params.storeId}/billboards`, data)
+                await axios.post(`/api/${params.storeId}/sizes`, data)
             }
             router.refresh()
-            router.push(`/${params.storeId}/billboards`)
+            router.push(`/${params.storeId}/sizes`)
             toast.success(toastMessage)
         } catch {
             toast.error('Ups! Algo salió mal.')
@@ -71,12 +71,12 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`)
+            await axios.delete(`/api/${params.storeId}/sizes/${params.sizeId}`)
             router.refresh()
-            router.push(`/${params.storeId}/billboards`)
-            toast.success('Cartel eliminado.')
+            router.push(`/${params.storeId}/sizes`)
+            toast.success('Tamaño eliminado.')
         } catch {
-            toast.error('Asegurate de borrar todos los productos y categorias primero.')
+            toast.error('Asegurate de borrar todos los productos que usan este tamaño.')
         } finally  {
             setLoading(false)
             setOpen(false)
@@ -114,37 +114,32 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
                 <form onSubmit={form.handleSubmit(onSubmit)} 
                     className="space-y-8 w-full"
                 >
-                    <FormField 
+                    <div className="grid grid-cols-3 gap-8">
+                        <FormField 
                             control={form.control}
-                            name="imageUrl"
+                            name="name"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>
-                                        Imagen de fondo
+                                        Nombre
                                     </FormLabel>
                                     <FormControl>
-                                        <ImageUpload 
-                                            value={field.value ? [field.value] : []}
-                                            disabled={loading}
-                                            onChange={(url) => field.onChange(url)}
-                                            onRemove={() => field.onChange("")}
-                                        />
+                                        <Input disabled={loading} placeholder="Nombre del tamaño" {...field}/>
                                     </FormControl>
                                     <FormMessage/>
                                 </FormItem>
                             )}
                         />
-                    <div className="grid grid-cols-3 gap-8">
                         <FormField 
                             control={form.control}
-                            name="label"
+                            name="value"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>
-                                        Titulo
+                                        Valor
                                     </FormLabel>
                                     <FormControl>
-                                        <Input disabled={loading} placeholder="Titulo del cartel" {...field}/>
+                                        <Input disabled={loading} placeholder="Valor de tamaño" {...field}/>
                                     </FormControl>
                                     <FormMessage/>
                                 </FormItem>
