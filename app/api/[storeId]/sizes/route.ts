@@ -10,18 +10,18 @@ export async function POST (
         const { userId } = auth()
         const body =  await req.json()
 
-        const { label, imageUrl } = body
+        const { name, value } = body
 
         if (!userId) {
             return new NextResponse('Unauthenticated', { status: 401})
         }
 
-        if (!label) {
-            return new NextResponse('Label is required', { status: 400})
+        if (!name) {
+            return new NextResponse('Name is required', { status: 400})
         }
 
-        if (!imageUrl) {
-            return new NextResponse('Image URL is required', { status: 400})
+        if (!value) {
+            return new NextResponse('Value URL is required', { status: 400})
         }
 
         if (!params.storeId) {
@@ -39,18 +39,18 @@ export async function POST (
             return new NextResponse('Unauthorized', { status: 403})
         }
 
-        const billboard = await prismadb.billboard.create({
+        const size = await prismadb.size.create({
             data: {
-                label,
-                imageUrl,
+                name,
+                value,
                 storeId: params.storeId
             }
         })
 
-        return NextResponse.json(billboard)
+        return NextResponse.json(size)
 
     } catch (error) {
-        console.log('[BILLBOARD_POST]', error)
+        console.log('[SIZES_POST]', error)
         return new NextResponse('Internal error', { status: 500})
     }
 }
@@ -64,16 +64,16 @@ export async function GET (
             return new NextResponse('Store ID URL is required', { status: 400})
         }
 
-        const billboards = await prismadb.billboard.findMany({
+        const sizes = await prismadb.size.findMany({
             where: {
                 storeId: params.storeId
             }
         })
 
-        return NextResponse.json(billboards)
+        return NextResponse.json(sizes)
 
     } catch (error) {
-        console.log('[BILLBOARD_GET]', error)
+        console.log('[SIZES_GET]', error)
         return new NextResponse('Internal error', { status: 500})
     }
 }

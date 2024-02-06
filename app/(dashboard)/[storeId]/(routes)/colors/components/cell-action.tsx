@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
-import { SizeColumn } from "./columns"
+import { ColorColumn } from "./columns"
 import { 
     DropdownMenu, 
     DropdownMenuContent, 
@@ -17,7 +17,7 @@ import axios from "axios"
 import { AlertModal } from "@/components/modals/alert-modal"
 
 interface CellActionProps {
-    data: SizeColumn
+    data: ColorColumn
 }
 
 
@@ -33,17 +33,17 @@ export const CellAction: React.FC<CellActionProps> = ({
 
     const onCopy = (id: string) => {
         navigator.clipboard.writeText(id)
-        toast.success('API del tamaño copiada al portapapeles.')
+        toast.success('API del color copiada.')
     }
 
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/${params.storeId}/sizes/${data.id}`)
+            await axios.delete(`/api/${params.storeId}/colors/${data.id}`)
             router.refresh()
-            toast.success('Tamaño eliminado.')
+            toast.success('Color eliminado.')
         } catch {
-            toast.error('Asegurate de borrar todos los productos que usan este tamaño.')
+            toast.error('Asegurate de borrar todos los productos que usan este color.')
         } finally  {
             setLoading(false)
             setOpen(false)
@@ -73,7 +73,7 @@ export const CellAction: React.FC<CellActionProps> = ({
                         <Copy className="mr-2 size-4" />
                         Copiar ID
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.push(`/${params.storeId}/sizes/${data.id}`)}>
+                    <DropdownMenuItem onClick={() => router.push(`/${params.storeId}/colors/${data.id}`)}>
                         <Edit className="mr-2 size-4" />
                         Actualizar
                     </DropdownMenuItem>
