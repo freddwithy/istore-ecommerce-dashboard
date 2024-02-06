@@ -59,8 +59,8 @@ export const ColorForm: React.FC<ColorFormProps> = ({
             } else {
                 await axios.post(`/api/${params.storeId}/colors`, data)
             }
+            router.push(`/${params.storeId}/colors`) 
             router.refresh()
-            router.push(`/${params.storeId}/colors`)
             toast.success(toastMessage)
         } catch {
             toast.error('Ups! Algo salió mal.')
