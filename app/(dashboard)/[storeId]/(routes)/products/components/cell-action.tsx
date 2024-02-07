@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
-import { BillboardColumn } from "./columns"
+import { ProductColumn } from "./columns"
 import { 
     DropdownMenu, 
     DropdownMenuContent, 
@@ -17,7 +17,7 @@ import axios from "axios"
 import { AlertModal } from "@/components/modals/alert-modal"
 
 interface CellActionProps {
-    data: BillboardColumn
+    data: ProductColumn
 }
 
 
@@ -33,17 +33,17 @@ export const CellAction: React.FC<CellActionProps> = ({
 
     const onCopy = (id: string) => {
         navigator.clipboard.writeText(id)
-        toast.success('API del cartel copiada al portapapeles.')
+        toast.success('API del producto copiado.')
     }
 
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/${params.storeId}/billboards/${data.id}`)
+            await axios.delete(`/api/${params.storeId}/products/${data.id}`)
             router.refresh()
-            toast.success('Cartel eliminado.')
+            toast.success('Producto eliminado.')
         } catch {
-            toast.error('Asegurate de borrar todos los productos y categorias primero.')
+            toast.error('Ups! Algo salió mal.')
         } finally  {
             setLoading(false)
             setOpen(false)
@@ -73,7 +73,7 @@ export const CellAction: React.FC<CellActionProps> = ({
                         <Copy className="mr-2 size-4" />
                         Copiar ID
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => router.push(`/${params.storeId}/billboards/${data.id}`)}>
+                    <DropdownMenuItem onClick={() => router.push(`/${params.storeId}/products/${data.id}`)}>
                         <Edit className="mr-2 size-4" />
                         Actualizar
                     </DropdownMenuItem>

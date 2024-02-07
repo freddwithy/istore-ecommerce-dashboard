@@ -16,7 +16,7 @@ export const columns: ColumnDef<CategoryColumn>[] = [
     header: "Nombre",
   },
   {
-    accessorKey: "billboard",
+    accessorKey: "billboardLabel",
     header: "Cartel",
     cell: ({ row }) => row.original.billboardLabel,
   },

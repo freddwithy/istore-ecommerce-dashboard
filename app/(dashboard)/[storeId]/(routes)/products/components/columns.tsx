@@ -27,16 +27,14 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "color",
     header: "Color",
-    cell: ({ row }) => {
-      <div className="flex items-center gap-x-2">
-        {row.original.color}
-        <div className="rounded-full size-6" style={{ backgroundColor: row.original.color }}/>
-      </div>
-    }
   },
   {
     accessorKey: "price",
     header: "Precio",
+  },
+  {
+    accessorKey: "category",
+    header: "Categoría",
   },
   {
     accessorKey: "isArchived",

@@ -2,7 +2,8 @@
 
 import { AlertModal } from "@/components/modals/alert-modal";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import ImageUpload from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
@@ -34,7 +35,7 @@ type ProductFormValues = z.infer<typeof formSchema>
 interface ProductFormProps {
     initialData: Product & {
         images: Image[]
-    } | null;
+    } | null
     categories: Category[]
     colors: Color[]
     sizes: Size[]
@@ -78,11 +79,11 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         try {
             setLoading(true)
             if (initialData) {
-                await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, data)
+                await axios.patch(`/api/${params.storeId}/products/${params.productId}`, data)
             } else {
-                await axios.post(`/api/${params.storeId}/billboards`, data)
+                await axios.post(`/api/${params.storeId}/products`, data)
             }
-            router.push(`/${params.storeId}/billboards`)
+            router.push(`/${params.storeId}/products`)
             router.refresh()
             toast.success(toastMessage)
         } catch {
@@ -95,12 +96,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`)
+            await axios.delete(`/api/${params.storeId}/products/${params.productId}`)
             router.refresh()
-            router.push(`/${params.storeId}/billboards`)
-            toast.success('Cartel eliminado.')
+            router.push(`/${params.storeId}/products`)
+            toast.success('Producto eliminado.')
         } catch {
-            toast.error('Asegurate de borrar todos los productos y categorias primero.')
+            toast.error('Ups! Algo salió mal.')
         } finally  {
             setLoading(false)
             setOpen(false)
@@ -142,7 +143,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                             control={form.control}
                             name="images"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="">
                                     <FormLabel>
                                         Imagenes
                                     </FormLabel>
@@ -223,6 +224,124 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                                         </SelectContent>
                                     </Select>
                                     <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField 
+                            control={form.control}
+                            name="sizeId"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>
+                                        Tamaño
+                                    </FormLabel>
+                                    <Select 
+                                        disabled={loading}
+                                        onValueChange={field.onChange}
+                                        value={field.value}
+                                        defaultValue={field.value}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue 
+                                                    defaultValue={field.value}
+                                                    placeholder="Selecciona un tamaño"
+                                                />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {sizes.map((size) => (
+                                                <SelectItem
+                                                    key={size.id}
+                                                    value={size.id}
+                                                >
+                                                    {size.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField 
+                            control={form.control}
+                            name="colorId"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>
+                                        Color
+                                    </FormLabel>
+                                    <Select 
+                                        disabled={loading}
+                                        onValueChange={field.onChange}
+                                        value={field.value}
+                                        defaultValue={field.value}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue 
+                                                    defaultValue={field.value}
+                                                    placeholder="Selecciona un color"
+                                                />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {colors.map((color) => (
+                                                <SelectItem
+                                                    key={color.id}
+                                                    value={color.id}
+                                                >
+                                                    {color.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField 
+                            control={form.control}
+                            name="isFeatured"
+                            render={({ field }) => (
+                                <FormItem className="flex items-start space-x-3 space-y-0 rounded-md border p-4">
+                                    <FormControl>
+                                        <Checkbox 
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
+                                        />
+                                    </FormControl>
+                                    <div className="space-y-1 leading-none">
+                                        <FormLabel>
+                                            Destacado
+                                        </FormLabel>
+                                        <FormDescription>
+                                            Este producto aparecera en el inicio.
+                                        </FormDescription>
+                                    </div>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField 
+                            control={form.control}
+                            name="isArchived"
+                            render={({ field }) => (
+                                <FormItem className="flex items-start space-x-3 space-y-0 rounded-md border p-4">
+                                    <FormControl>
+                                        <Checkbox 
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
+                                        />
+                                    </FormControl>
+                                    <div className="space-y-1 leading-none">
+                                        <FormLabel>
+                                            Archivado
+                                        </FormLabel>
+                                        <FormDescription>
+                                            Este producto estara archivado. No sera visible.
+                                        </FormDescription>
+                                    </div>
                                 </FormItem>
                             )}
                         />
