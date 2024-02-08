@@ -13,10 +13,10 @@ export async function GET (
 
         const product = await prismadb.product.findUnique({
             where: {
-                id: params.productId,
+                id_producto: params.productId,
             },
             include: {
-                images: true, 
+                photo: true, 
                 category: true, 
                 color: true,
                 size: true
@@ -40,25 +40,31 @@ export async function PATCH (
         const body =  await req.json()
 
         const { 
-            name, 
-            price,
+            nombre, 
+            precio_total,
+            descripcion,
             categoryId,
+            cantidad,
             colorId, 
             sizeId, 
-            isArchived,
+            isDeleted,
             isFeatured,
-            images
+            photo
         } = body
 
         if (!userId) {
             return new NextResponse('Unauthenticated', { status: 401})
         }
-        if (!name) {
-            return new NextResponse('Name is required', { status: 400})
+        if (!nombre) {
+            return new NextResponse('Nombre is required', { status: 400})
         }
 
-        if (!price) {
-            return new NextResponse('Price is required', { status: 400})
+        if (!precio_total) {
+            return new NextResponse('precio_total is required', { status: 400})
+        }
+        
+        if (!descripcion) {
+            return new NextResponse('descripcion is required', { status: 400})
         }
 
         if (!categoryId) {
@@ -73,8 +79,8 @@ export async function PATCH (
             return new NextResponse('Size ID is required', { status: 400})
         }
 
-        if (!images || !images.length) {
-            return new NextResponse('Images are required', { status: 400})
+        if (!photo || !photo.length) {
+            return new NextResponse('Photos are required', { status: 400})
         }
 
         if (!params.productId) {
@@ -94,31 +100,31 @@ export async function PATCH (
 
         await prismadb.product.update({
             where: {
-                id: params.productId
+                id_producto: params.productId
             }, 
             data: {
-                name,
-                price,
+                nombre,
+                precio_total,
                 categoryId,
                 colorId,
                 sizeId,
-                images: {
+                photo: {
                     deleteMany: {}
                 },
                 isFeatured,
-                isArchived
+                isDeleted
             }
         })
 
         const product = await prismadb.product.update({
             where: {
-                id: params.productId
+                id_producto: params.productId
             },
             data: {
-                images: {
+                photo: {
                     createMany: {
                         data: [
-                            ...images.map((image: { url: string }) => image)
+                            ...photo.map((image: { url: string }) => image)
                         ]
                     }
                 }
@@ -161,7 +167,7 @@ export async function DELETE (
 
         const product = await prismadb.product.deleteMany({
             where: {
-                id: params.productId,
+                id_producto: params.productId,
             }
         })
 

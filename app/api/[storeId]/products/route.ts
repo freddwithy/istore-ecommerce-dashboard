@@ -11,26 +11,28 @@ export async function POST (
         const body =  await req.json()
 
         const { 
-            name, 
-            price,
+            nombre, 
+            precio_total,
             categoryId,
             colorId, 
             sizeId, 
-            isArchived,
+            isDeleted,
             isFeatured,
-            images
+            photo,
+            descripcion,
+            cantidad,
         } = body
 
         if (!userId) {
             return new NextResponse('Unauthenticated', { status: 401})
         }
 
-        if (!name) {
-            return new NextResponse('Name is required', { status: 400})
+        if (!nombre) {
+            return new NextResponse('Nombre is required', { status: 400})
         }
 
-        if (!price) {
-            return new NextResponse('Price is required', { status: 400})
+        if (!precio_total) {
+            return new NextResponse('precio_total is required', { status: 400})
         }
 
         if (!categoryId) {
@@ -45,8 +47,8 @@ export async function POST (
             return new NextResponse('Size ID is required', { status: 400})
         }
 
-        if (!images || !images.length) {
-            return new NextResponse('Images are required', { status: 400})
+        if (!photo || !photo.length) {
+            return new NextResponse('Photos are required', { status: 400})
         }
 
 
@@ -67,21 +69,23 @@ export async function POST (
 
         const product = await prismadb.product.create({
             data: {
-                name,
-                price,
-                isArchived,
+                nombre,
+                precio_total,
+                isDeleted,
                 isFeatured,
                 colorId,
                 sizeId,
                 categoryId,
+                cantidad,
                 storeId: params.storeId,
-                images: {
+                photo: {
                     createMany: {
                         data: [
-                            ...images.map((image: { url: string }) => image)
+                            ...photo.map((image: { url: string }) => image)
                         ]
                     }
-                }
+                },
+                descripcion,
             }
         })
 
@@ -116,13 +120,13 @@ export async function GET (
                 colorId,
                 sizeId,
                 isFeatured: isFeatured ? true : undefined,
-                isArchived: false
+                isDeleted: false
             },
             include: {
-                images: true,
+                photo: true,
                 category: true,
                 color: true,
-                size: true
+                size: true,
             },
             orderBy: {
                 createdAt: 'desc'

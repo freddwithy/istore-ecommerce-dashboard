@@ -79,7 +79,7 @@ model Color {
 }
 
 model Product {
-  id  String @id @default(uuid())
+  id_producto  String @id @default(uuid())
   storeId String 
   store Store @relation("StoreToProduct", fields: [storeId], references: [id])
   categoryId String
@@ -88,11 +88,22 @@ model Product {
   size Size @relation( fields: [sizeId], references: [id])
   colorId String
   color Color @relation( fields: [colorId], references: [id])
+<<<<<<< Updated upstream
   images Image[]
   name String
   price Decimal
   isFeatured Boolean @default(false)
   isArchived Boolean @default(false)
+=======
+  photo Image[]
+  nombre String
+  cantidad Decimal
+  precio_total Decimal
+  pedido Pedido[]
+  descripcion String
+  isFeatured Boolean @default(false)
+  isDeleted Boolean @default(false)
+>>>>>>> Stashed changes
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -105,10 +116,81 @@ model Product {
 model Image {
   id String @id @default(uuid())
   productId String
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id_producto], onDelete: Cascade)
   url String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([productId])
+<<<<<<< Updated upstream
+=======
+}
+
+model Orden {
+  id String @id @default(uuid())
+  storeId String
+  store Store @relation("StoreToOrder", fields: [storeId], references: [id])
+  compradorId String
+  comprador Comprador @relation(fields: [compradorId], references: [id])
+  compras_items Pedido[]
+  descripcion_resumen String
+  fecha_maxima_pago String
+  id_pedido_comercio String
+  monto_total Decimal
+  public_key String
+  tipo_pedido String
+  token String
+  cancelado Boolean
+  pagado Boolean
+  forma_pago_identificador Decimal
+  numero_pedido String
+  forma_pago String
+  fecha_pago String
+  hash_pedido String
+  isDeleted Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([storeId])
+  @@index([compradorId])
+}
+
+model Pedido {
+  id String @id @default(uuid())
+  orderId String
+  orden Orden @relation(fields: [orderId], references: [id])
+  productId String
+  product Product @relation(fields: [productId], references: [id_producto])
+  compradorId String
+  comprador Comprador @relation(fields: [compradorId], references: [id])
+  monto_total Decimal
+  fecha_maximo_pago DateTime
+  isDeleted Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([productId])
+  @@index([compradorId])
+}
+
+model Comprador {
+  id String @id @default(uuid())
+  nombre String
+  direccion String
+  email String
+  ruc String
+  documento String
+  razon_social String
+  tipo_document String
+  ciudad String
+  coordenadas String
+  telefono String
+  isDeleted Boolean
+  pedido Pedido[]
+  orden Orden[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+>>>>>>> Stashed changes
 }

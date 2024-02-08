@@ -9,6 +9,7 @@ import ImageUpload from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Category, Color, Image, Product, Size } from "@prisma/client";
 import axios from "axios";
@@ -20,21 +21,23 @@ import toast from "react-hot-toast";
 import { z } from "zod";
 
 const formSchema = z.object({
-    name: z.string().min(1),
-    images: z.object({ url: z.string() }).array(),
-    price: z.coerce.number().min(1),
+    nombre: z.string().min(1),
+    photo: z.object({ url: z.string() }).array(),
+    precio_total: z.coerce.number().min(1),
     categoryId: z.string().min(1),
     colorId: z.string().min(1),
     sizeId: z.string().min(1),
+    cantidad: z.coerce.number().min(1),
+    descripcion: z.string().min(1),
     isFeatured: z.boolean().default(false).optional(),
-    isArchived: z.boolean().default(false).optional(),
+    isDeleted: z.boolean().default(false).optional(),
 })
 
 type ProductFormValues = z.infer<typeof formSchema>
 
 interface ProductFormProps {
     initialData: Product & {
-        images: Image[]
+        photo: Image[]
     } | null
     categories: Category[]
     colors: Color[]
@@ -62,16 +65,18 @@ export const ProductForm: React.FC<ProductFormProps> = ({
         resolver: zodResolver(formSchema),
         defaultValues: initialData ? {
             ...initialData,
-            price: parseFloat(String(initialData?.price)),
+            precio_total: parseFloat(String(initialData?.precio_total)),
+            cantidad: parseFloat(String(initialData?.cantidad)),
         } : {
-            name: '',
-            images: [],
-            price: 0,
+            nombre: '',
+            photo: [],
+            precio_total: 0,
             categoryId: '',
             colorId: '',
             sizeId: '',
+            descripcion: '',
             isFeatured: false,
-            isArchived: false,
+            isDeleted: false,
         }
     })
 
@@ -141,7 +146,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 >
                     <FormField 
                             control={form.control}
-                            name="images"
+                            name="photo"
                             render={({ field }) => (
                                 <FormItem className="">
                                     <FormLabel>
@@ -162,7 +167,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     <div className="grid grid-cols-3 gap-8">
                         <FormField 
                             control={form.control}
-                            name="name"
+                            name="nombre"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>
@@ -177,7 +182,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                         />
                         <FormField 
                             control={form.control}
-                            name="price"
+                            name="precio_total"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>
@@ -325,7 +330,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                         />
                         <FormField 
                             control={form.control}
-                            name="isArchived"
+                            name="isDeleted"
                             render={({ field }) => (
                                 <FormItem className="flex items-start space-x-3 space-y-0 rounded-md border p-4">
                                     <FormControl>
@@ -342,6 +347,36 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                                             Este producto estara archivado. No sera visible.
                                         </FormDescription>
                                     </div>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField 
+                            control={form.control}
+                            name="descripcion"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>
+                                        Descripción
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Textarea  placeholder="Agrega una descripción" className="resize-none" {...field}/>
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField 
+                            control={form.control}
+                            name="cantidad"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>
+                                        Precio
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input type="number" disabled={loading} placeholder="1000" {...field}/>
+                                    </FormControl>
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
