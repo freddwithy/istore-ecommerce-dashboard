@@ -20,6 +20,7 @@ model Store {
   sizes Size[] @relation("StoreToSize")
   colors Color[] @relation("StoreToColor")
   products Product[] @relation("StoreToProduct")
+  orders Orden[] @relation("StoreToOrders")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
 }
@@ -88,13 +89,6 @@ model Product {
   size Size @relation( fields: [sizeId], references: [id])
   colorId String
   color Color @relation( fields: [colorId], references: [id])
-<<<<<<< Updated upstream
-  images Image[]
-  name String
-  price Decimal
-  isFeatured Boolean @default(false)
-  isArchived Boolean @default(false)
-=======
   photo Image[]
   nombre String
   cantidad Decimal
@@ -103,7 +97,6 @@ model Product {
   descripcion String
   isFeatured Boolean @default(false)
   isDeleted Boolean @default(false)
->>>>>>> Stashed changes
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -122,14 +115,12 @@ model Image {
   updatedAt DateTime @updatedAt
 
   @@index([productId])
-<<<<<<< Updated upstream
-=======
 }
 
 model Orden {
   id String @id @default(uuid())
   storeId String
-  store Store @relation("StoreToOrder", fields: [storeId], references: [id])
+  store Store @relation("StoreToOrders", fields: [storeId], references: [id])
   compradorId String
   comprador Comprador @relation(fields: [compradorId], references: [id])
   compras_items Pedido[]
@@ -192,5 +183,4 @@ model Comprador {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
->>>>>>> Stashed changes
 }
