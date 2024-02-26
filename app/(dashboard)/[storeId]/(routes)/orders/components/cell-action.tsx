@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
-import { OrdersColumn } from "./columns"
+import { OrderColumn } from "./columns"
 import { 
     DropdownMenu, 
     DropdownMenuContent, 
@@ -17,7 +17,7 @@ import axios from "axios"
 import { AlertModal } from "@/components/modals/alert-modal"
 
 interface CellActionProps {
-    data: OrdersColumn
+    data: OrderColumn
 }
 
 
