@@ -1,60 +1,62 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
+
 import { CellAction } from "./cell-action"
 
 export type ProductColumn = {
   id: string
-  nombre: string
-  precio: string
-  size: string
-  category: string
-  color: string
-  cantidad: number
-  isFeatured: boolean
-  isDeleted: boolean
-  createdAt: string
+  name: string;
+  price: string;
+  category: string;
+  size: string;
+  color: string;
+  createdAt: string;
+  isFeatured: boolean;
+  isArchived: boolean;
 }
 
 export const columns: ColumnDef<ProductColumn>[] = [
   {
-    accessorKey: "nombre",
-    header: "Nombre",
+    accessorKey: "name",
+    header: "Name",
+  },
+  {
+    accessorKey: "isArchived",
+    header: "Archived",
+  },
+  {
+    accessorKey: "isFeatured",
+    header: "Featured",
+  },
+  {
+    accessorKey: "price",
+    header: "Price",
+  },
+  {
+    accessorKey: "category",
+    header: "Category",
   },
   {
     accessorKey: "size",
-    header: "Tamaño",
+    header: "Size",
   },
   {
     accessorKey: "color",
     header: "Color",
-  },
-  {
-    accessorKey: "precio",
-    header: "Precio",
-  },
-  {
-    accessorKey: "category",
-    header: "Categoría",
-  },
-  {
-    accessorKey: "isDeleted",
-    header: "Fuera de Stock",
-  },
-  {
-    accessorKey: "isFeatured",
-    header: "Destacado",
-  },
-  {
-    accessorKey: "cantidad",
-    header: "En Stock",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-x-2">
+        {row.original.color}
+        <div className="h-6 w-6 rounded-full border" style={{ backgroundColor: row.original.color }} />
+      </div>
+    )
   },
   {
     accessorKey: "createdAt",
-    header: "Fecha",
+    header: "Date",
   },
   {
     id: "actions",
     cell: ({ row }) => <CellAction data={row.original} />
-  }
-]
+  },
+];
